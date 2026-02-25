@@ -26,6 +26,7 @@ class PizzaOrderTaskTest {
             .orderId(UUID.randomUUID().toString())
             .pizzaType(PizzaTypes.PEPPERONI)
             .pizzaSize(PizzaSizes.MEDIUM)
+            .orderStatus(OrderStatus.CREATED)
             .build();
 
     @Nested
