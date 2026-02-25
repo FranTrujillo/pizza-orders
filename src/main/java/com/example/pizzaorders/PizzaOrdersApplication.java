@@ -25,31 +25,19 @@ public class PizzaOrdersApplication {
         try {
             config = new LHConfig();
 
-            LHTaskWorker createOrder = new LHTaskWorker(tasks, "create-order", config);
-            createOrder.registerTaskDef();
+            LHTaskWorker[] workers = {
+                    new LHTaskWorker(tasks, "create-order", config),
+                    new LHTaskWorker(tasks, "confirm-payment", config),
+                    new LHTaskWorker(tasks, "prepare-pizza", config),
+                    new LHTaskWorker(tasks, "bake-pizza", config),
+                    new LHTaskWorker(tasks, "deliver-pizza", config)
+            };
 
-            LHTaskWorker confirmPayment = new LHTaskWorker(tasks, "confirm-payment", config);
-            confirmPayment.registerTaskDef();
-
-            LHTaskWorker preparePizza = new LHTaskWorker(tasks, "prepare-pizza", config);
-            preparePizza.registerTaskDef();
-
-            LHTaskWorker bakePizza = new LHTaskWorker(tasks, "bake-pizza", config);
-            bakePizza.registerTaskDef();
-
-            LHTaskWorker deliverPizza = new LHTaskWorker(tasks, "deliver-pizza", config);
-            deliverPizza.registerTaskDef();
-
-            Runtime.getRuntime().addShutdownHook(new Thread(createOrder::close));
-            Runtime.getRuntime().addShutdownHook(new Thread(confirmPayment::close));
-            Runtime.getRuntime().addShutdownHook(new Thread(preparePizza::close));
-            Runtime.getRuntime().addShutdownHook(new Thread(bakePizza::close));
-            Runtime.getRuntime().addShutdownHook(new Thread(deliverPizza::close));
-            createOrder.start();
-            confirmPayment.start();
-            preparePizza.start();
-            bakePizza.start();
-            deliverPizza.start();
+            for (LHTaskWorker worker : workers) {
+                worker.registerTaskDef();
+                Runtime.getRuntime().addShutdownHook(new Thread(worker::close));
+                worker.start();
+            }
 
             Workflow workflow = getWorkflow();
             workflow.registerWfSpec(config.getBlockingStub());
@@ -63,6 +51,5 @@ public class PizzaOrdersApplication {
     public static void main(String[] args) {
         SpringApplication.run(PizzaOrdersApplication.class, args);
     }
-
 
 }

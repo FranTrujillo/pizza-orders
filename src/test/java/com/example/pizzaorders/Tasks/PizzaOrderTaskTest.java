@@ -87,14 +87,21 @@ class PizzaOrderTaskTest {
     class OrderWorkflow {
         @Test
         void shouldFollowAllWorkflow() {
-            assertThat(pizzaOrderTask.createOrder(order).getOrderStatus()).isEqualTo(OrderStatus.CREATED);
-            assertThat(pizzaOrderTask.confirmPayment(order.getOrderId()).getOrderStatus()).isEqualTo(OrderStatus.PAYMENT_CONFIRMED);
-            assertThat(pizzaOrderTask.preparePizza(order.getOrderId()).getOrderStatus()).isEqualTo(OrderStatus.PREPARING);
-            assertThat(pizzaOrderTask.bakePizza(order.getOrderId()).getOrderStatus()).isEqualTo(OrderStatus.BAKED);
-            assertThat(pizzaOrderTask.deliverPizza(order.getOrderId()).getOrderStatus()).isEqualTo(OrderStatus.DELIVERED);
+            assertThat(pizzaOrderTask.createOrder(order).getOrderStatus())
+                    .isEqualTo(OrderStatus.CREATED);
+
+            assertThat(pizzaOrderTask.confirmPayment(order.getOrderId()).getOrderStatus())
+                    .isEqualTo(OrderStatus.PAYMENT_CONFIRMED);
+
+            assertThat(pizzaOrderTask.preparePizza(order.getOrderId()).getOrderStatus())
+                    .isEqualTo(OrderStatus.PREPARING);
+
+            assertThat(pizzaOrderTask.bakePizza(order.getOrderId()).getOrderStatus())
+                    .isEqualTo(OrderStatus.BAKED);
+
+            assertThat(pizzaOrderTask.deliverPizza(order.getOrderId()).getOrderStatus())
+                    .isEqualTo(OrderStatus.DELIVERED);
 
         }
     }
 }
-
-
