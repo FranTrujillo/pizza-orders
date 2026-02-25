@@ -4,12 +4,19 @@ import com.example.pizzaorders.model.PizzaOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.littlehorse.sdk.common.config.LHConfig;
 import io.littlehorse.sdk.common.proto.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/orders")
+@Tag(name = "Pizza Orders")
 public class OrderController {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -19,6 +26,10 @@ public class OrderController {
         this.config = config;
     }
 
+    @Operation(summary = "Create a new pizza order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pizza workflow was successful", content = @Content(schema = @Schema(implementation = PizzaOrder.class))),
+    })
     @PostMapping("/create-order")
     public String createOrder(@RequestBody PizzaOrder pizzaOrder) {
         try {
