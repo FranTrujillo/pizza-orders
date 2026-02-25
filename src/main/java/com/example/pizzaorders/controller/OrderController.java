@@ -1,6 +1,8 @@
 package com.example.pizzaorders.controller;
 
-import com.example.pizzaorders.model.PizzaOrder;
+import com.example.pizzaorders.model.PizzaOrderRequest;
+import com.example.pizzaorders.model.PizzaOrderResponse;
+import com.example.pizzaorders.model.inputs.OrderStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.littlehorse.sdk.common.config.LHConfig;
 import io.littlehorse.sdk.common.proto.*;
@@ -28,13 +30,14 @@ public class OrderController {
 
     @Operation(summary = "Create a new pizza order")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Pizza workflow was successful", content = @Content(schema = @Schema(implementation = PizzaOrder.class))),
+            @ApiResponse(responseCode = "200", description = "Pizza workflow was successful", content = @Content(schema = @Schema(implementation = PizzaOrderResponse.class))),
     })
     @PostMapping("/create-order")
-    public String createOrder(@RequestBody PizzaOrder pizzaOrder) {
+    public PizzaOrderResponse createOrder(@RequestBody PizzaOrderRequest pizzaOrder) {
         try {
             String orderId = UUID.randomUUID().toString();
             pizzaOrder.setOrderId(orderId);
+            pizzaOrder.setOrderStatus(OrderStatus.CREATED);
             String orderJson = objectMapper.writeValueAsString(pizzaOrder);
 
             VariableValue orderVariable = VariableValue.newBuilder()
@@ -48,9 +51,9 @@ public class OrderController {
 
             config.getBlockingStub().runWf(request);
 
-            return "Pizza workflow started with OrderID: " + orderId;
+            return new PizzaOrderResponse("Pizza workflow started with OrderID: " + orderId, pizzaOrder);
         } catch (Exception e) {
-            return "Error starting workflow: " + e.getMessage();
+            throw new RuntimeException("Failed to start pizza workflow: " + e.getMessage());
         }
     }
 }

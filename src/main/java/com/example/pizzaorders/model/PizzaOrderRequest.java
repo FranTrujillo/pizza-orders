@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Pizza Order Model")
-public class PizzaOrder {
+public class PizzaOrderRequest {
 
     @Schema(description = "Identifier of the order (UUID)", example = "a6b611e7-c230-4300-b35d-a45c21392433", accessMode = Schema.AccessMode.READ_ONLY)
     private String orderId;

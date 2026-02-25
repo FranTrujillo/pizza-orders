@@ -1,6 +1,6 @@
 package com.example.pizzaorders.Tasks;
 
-import com.example.pizzaorders.model.PizzaOrder;
+import com.example.pizzaorders.model.PizzaOrderRequest;
 import com.example.pizzaorders.model.inputs.OrderStatus;
 import com.example.pizzaorders.model.inputs.PizzaSizes;
 import com.example.pizzaorders.model.inputs.PizzaTypes;
@@ -22,7 +22,7 @@ class PizzaOrderTaskTest {
         pizzaOrderTask = new PizzaOrderTask();
     }
 
-    PizzaOrder order = PizzaOrder.builder()
+    PizzaOrderRequest order = PizzaOrderRequest.builder()
             .orderId(UUID.randomUUID().toString())
             .pizzaType(PizzaTypes.PEPPERONI)
             .pizzaSize(PizzaSizes.MEDIUM)
@@ -33,7 +33,7 @@ class PizzaOrderTaskTest {
     class CreateOrder {
         @Test
         void shouldCreateNewOrder() {
-            PizzaOrder result = pizzaOrderTask.createOrder(order);
+            PizzaOrderRequest result = pizzaOrderTask.createOrder(order);
             assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.CREATED);
         }
     }
@@ -44,7 +44,7 @@ class PizzaOrderTaskTest {
         @Test
         void shouldConfirmPayment() {
             pizzaOrderTask.createOrder(order);
-            PizzaOrder result = pizzaOrderTask.confirmPayment(order.getOrderId());
+            PizzaOrderRequest result = pizzaOrderTask.confirmPayment(order.getOrderId());
             assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.PAYMENT_CONFIRMED);
         }
     }
@@ -55,7 +55,7 @@ class PizzaOrderTaskTest {
         @Test
         void shouldPreparePizza() {
             pizzaOrderTask.createOrder(order);
-            PizzaOrder result = pizzaOrderTask.preparePizza(order.getOrderId());
+            PizzaOrderRequest result = pizzaOrderTask.preparePizza(order.getOrderId());
             assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.PREPARING);
         }
     }
@@ -66,7 +66,7 @@ class PizzaOrderTaskTest {
         @Test
         void shouldBakedPizza() {
             pizzaOrderTask.createOrder(order);
-            PizzaOrder result = pizzaOrderTask.bakePizza(order.getOrderId());
+            PizzaOrderRequest result = pizzaOrderTask.bakePizza(order.getOrderId());
             assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.BAKED);
         }
     }
@@ -77,7 +77,7 @@ class PizzaOrderTaskTest {
         @Test
         void shouldDeliverPizza() {
             pizzaOrderTask.createOrder(order);
-            PizzaOrder result = pizzaOrderTask.deliverPizza(order.getOrderId());
+            PizzaOrderRequest result = pizzaOrderTask.deliverPizza(order.getOrderId());
             assertThat(result.getOrderStatus()).isEqualTo(OrderStatus.DELIVERED);
         }
     }
